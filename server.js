@@ -39,41 +39,32 @@ app.get('/', function (request, response) {
 
 
 // Squad pagina
+// Maak een GET route voor squad
 // Haal alle personen uit de betreffende squad uit de WHOIS API op
-//https://fdnd.directus.app/items/person/?filter={"squad_id":3}
-//https://fdnd.directus.app/items/person/?filter={"squad_id":3}&sort=name
+// https://fdnd.directus.app/items/person/?filter={"squad_id":3}
+// https://fdnd.directus.app/items/person/?filter={"squad_id":3}&sort=name
+// How To Define Routes and HTTP Request Methods in Express https://www.digitalocean.com/community/tutorials/nodejs-express-routing
+
 app.get('/squad', function (request, response) {
-  
-    fetchJson('https://fdnd.directus.app/items/person/?filter={"squad_id":3}&sort=name').then((apiData) => {
-      response.render('squad', {persons: apiData.data})
-    })
-
-})
-
-
-
-
-
-
-
-// Maak een GET route voor de find/filter dingen
-
-app.get('/filter/:q', function (request, response) {
-
-  /*
-  https://fdnd.directus.app/items/person/?filter={"name":"Koop"}
-  https://fdnd.directus.app/items/person/?filter={"name":{"_contains":"oo"}}
-  https://fdnd.directus.app/items/person/?filter={"name":{"_eq":"oo"}}
-  https://fdnd.directus.app/items/person/?filter={"bio":{"_icontains":"frontend"}}
-  */
-
-  fetchJson(apiUrl + '/person/' + request.params.q).then((apiData) => {
-      // Render person.ejs uit de views map en geef de opgehaalde data mee als variable, genaamd person
-      response.render('filter', {persons: apiData.data, squads: squadData.data})
+  fetchJson('https://fdnd.directus.app/items/person/?filter={"squad_id":3}').then((apiData) => {
+    response.render('squad', {persons: apiData.data})
   })
 })
+// Maak een GET route voor squad met een request parameter id
+app.get('/squad/:id', function (request, response) {
+
+  const uri = 'https://fdnd.directus.app/items/person/'
+  const squadId = request.params.id
+  const filter = '?filter={"squad_id":'+squadId+'}'
+  const sort = '' //'&sort=name'
+
+    fetchJson(uri+filter+sort).then((apiData) => {
+      response.render('squad', {persons: apiData.data})
+    })
+})
 
 
+// GET person
 // Maak een GET route voor een detailpagina met een request parameter id
 app.get('/person/:id', function (request, response) {
       
@@ -84,11 +75,37 @@ app.get('/person/:id', function (request, response) {
   })
 })
 
-// Maak een POST route voor de index
-app.post('/', function (request, response) {
-  // Er is nog geen afhandeling van POST, redirect naar GET op /
-  response.redirect(303, '/')
+
+// POST Person
+// Maak een POST route voor person
+// How To Retrieve URL and POST Parameters with Express https://www.digitalocean.com/community/tutorials/use-expressjs-to-get-url-and-post-parameters
+// Sending form data https://developer.mozilla.org/en-US/docs/Learn/Forms/Sending_and_retrieving_form_data
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.post('/person', function (request, response) {
+  
+    console.log(request.body)
+    const user_id = request.body.id || 65;
+    // const like = request.body.like || -1;
+    // console.log(user_id)
+    // console.log(like)
+
+    // response.send({
+    //   'user_id': user_id,
+    //   'likes': like
+    // });
+    
+  // Na afhandelen van de POST, doe een redirect naar GET /person
+  response.redirect('/person/'+user_id)
 })
+
+
+
+
+
+
 
 
 // Stel het poortnummer in waar express op moet gaan luisteren

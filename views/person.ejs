@@ -1,6 +1,6 @@
 <%- include('./partials/head') %>
 
-<h1>Student</h1>
+<h1>Person</h1>
 
 <a href="/">Back</a>
 
@@ -10,5 +10,24 @@
 <p>bio: <%- person.bio %>
 
 
+<form action="/person" method="POST">
+    <input type="text" value="65" name="id" id="id">
+    <input type="checkbox" value="1" name="like" id="id">
+    <button>Post</button>
+</form >
+
+<!-- <form action="/person" method="POST">
+    <fieldset>
+      <label for="say">What greeting do you want to say?</label>
+      <input name="say" id="say" value="Hi" />
+    </fieldset>
+    <fieldset>
+      <label for="to">Who do you want to say it to?</label>
+      <input name="to" id="to" value="Mom" />
+    </fieldset>
+
+    <button>Send my greetings</button>
+
+  </form> -->
 
 <%- include('./partials/foot') %>
