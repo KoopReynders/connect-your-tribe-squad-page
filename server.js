@@ -78,7 +78,7 @@ app.get('/detail/:id', function (request, response) {
 
 
 // POST Person
-// Maak een POST route voor person
+// Maak een POST route voor post data op een person
 // How To Retrieve URL and POST Parameters with Express https://www.digitalocean.com/community/tutorials/use-expressjs-to-get-url-and-post-parameters
 // Sending form data https://developer.mozilla.org/en-US/docs/Learn/Forms/Sending_and_retrieving_form_data
 
@@ -89,10 +89,10 @@ app.get('/detail/:id', function (request, response) {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.post('/person', function (request, response) {
+app.post('/detail', function (request, response) {
   
     console.log(request.body)
-    const user_id = request.body.id || 65;
+    const user_id = request.body.id || 1;
     // const like = request.body.like || -1;
     // console.log(user_id)
     // console.log(like)
@@ -103,7 +103,7 @@ app.post('/person', function (request, response) {
     // });g
     
   // Na afhandelen van de POST, doe een redirect naar GET /person
-  response.redirect('/person/'+user_id)
+  response.redirect('/detail/'+user_id)
 })
 
 
