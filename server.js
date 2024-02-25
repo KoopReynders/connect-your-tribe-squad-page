@@ -86,7 +86,7 @@ app.get('/detail/:id', function (request, response) {
   express.json() and express.urlencoded() 
   are built-in middleware functions to support JSON-encoded and URL-encoded bodies.
 */
-app.use(express.json());
+//app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.post('/detail', function (request, response) {
