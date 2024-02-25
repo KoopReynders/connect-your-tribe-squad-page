@@ -4,17 +4,19 @@
 
 <a href="/">Back</a>
 
-<h2><%= person.name %></h2>
-<p>Squad: <%= person.squad_id %>
-<p><img src="<%= person.avatar %>">
-<p>bio: <%- person.bio %>
+<% if(person){ %>
+  <h2><%= person.name %></h2>
+  <p>Squad: <%= person.squad_id %>
+  <p><img src="<%= person.avatar %>">
+  <p>bio: <%- person.bio %>
 
 
-<form action="/person" method="POST">
-    <input type="text" value="65" name="id" id="id">
-    <input type="checkbox" value="1" name="like" id="id">
-    <button>Post</button>
-</form >
+  <form action="/detail" method="POST">
+      <input type="text" value="65" name="id" id="id">
+      <input type="checkbox" value="1" name="like" id="id">
+      <button>Post</button>
+  </form >
+<% } %>
 
 <!-- <form action="/person" method="POST">
     <fieldset>
