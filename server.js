@@ -81,6 +81,10 @@ app.get('/person/:id', function (request, response) {
 // How To Retrieve URL and POST Parameters with Express https://www.digitalocean.com/community/tutorials/use-expressjs-to-get-url-and-post-parameters
 // Sending form data https://developer.mozilla.org/en-US/docs/Learn/Forms/Sending_and_retrieving_form_data
 
+/*
+  express.json() and express.urlencoded() 
+  are built-in middleware functions to support JSON-encoded and URL-encoded bodies.
+*/
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -95,7 +99,7 @@ app.post('/person', function (request, response) {
     // response.send({
     //   'user_id': user_id,
     //   'likes': like
-    // });
+    // });g
     
   // Na afhandelen van de POST, doe een redirect naar GET /person
   response.redirect('/person/'+user_id)
