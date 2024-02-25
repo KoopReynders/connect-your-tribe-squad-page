@@ -1,0 +1,268 @@
+*{
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+  /* --alert: #66e5bf; */
+  --alert: #fffc86;
+  /* --highlight: #a675f5;  */
+  --highlight: purple; 
+  --bgcolor: #efefef;
+  --light: white;
+  --outline: 0.4rem;
+  --border: 0.15em;
+}
+body{
+  background: var(--bgcolor);
+  /* background: pink; */
+  padding: 0.5rem;
+  font-family: Open Sans, sans-serif;
+}
+main{
+  /* background: pink; */
+  /* scroll-snap-points-y: repeat(3rem);
+  scroll-snap-type: y mandatory; */
+}
+div.code{
+  /* background: pink; */
+  font-size:0.6em;
+  font-size: 1.4vh;
+  color: #ccc;
+  word-wrap:break-word;
+  position:fixed;
+  width: 100vw;
+  height: 100vh;
+  padding: 0;
+  margin: 0 -1rem;
+  top: 0;
+  z-index: 0;
+  /* width: calc(100% - 2 * 1rem) */
+  /* overflow: hidden; */
+}
+/* 
+  HEADER 
+*/
+header{
+  position: fixed;
+  top: 1rem;
+  z-index:0;
+}
+h1{
+  font-size: 4rem;
+  letter-spacing: -0.3rem;
+  /* line-height: 1; */
+  overflow-x: hidden;
+  margin: 0;
+  text-transform: uppercase;
+}
+h1 a{
+  /* background: palegoldenrod; */
+  text-decoration: none;
+  color: inherit;
+  pointer-events: auto;
+}
+/* h1 a:focus-visible */
+/* h1 a:focus-within */
+h1 a:hover, h1 a:focus{
+  color: var(--light);
+  background: var(--highlight);
+}
+h1 > span{
+  display: block;
+  font-size: 7rem;
+  letter-spacing: -0.6rem;
+  margin-top: -1.5rem;
+  pointer-events: none;
+}
+h1 > span > span{
+  color: var(--highlight)
+}
+h2{
+  font-size: 3rem;
+}
+/*
+  LIJST FOTO'S en FORMULIER
+*/
+main{
+  margin-top: 12rem;
+}
+article{
+  position: relative;
+  /* z-index: 2; */
+
+}
+/* LIJST FOTO"S */
+ul{
+  padding: 0;
+}
+li{
+  position: relative;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  background-color: var(--light);
+  list-style: none;
+  scroll-snap-align: start;
+  aspect-ratio: 16 / 9;
+}
+li:target{
+  background: var(--alert);
+  scroll-margin-top: 5rem;
+}
+nav{
+  position: relative;
+  display: flex;
+  /* background: var(--bgcolor); */
+  /* background:palevioletred; */
+  /* z-index: 2; */
+  /* flex-wrap: wrap; */
+}
+nav a{
+  width: 30%;
+  margin-top: 0.4rem;
+  margin-right: 0.4rem;
+  position:relative;
+  background: var(--light);
+  padding: 0.5rem;
+}
+nav a:hover, nav a:focus{
+  /* border: var(--outline) solid var(--highlight); */
+  background: var(--highlight);
+}
+img{
+  width: 100%;
+}
+nav h3, img+h3{
+  /* z-index: 2; */
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  background: var(--light);
+  display: inline-block;
+  /* margin-top: -10em; */
+  padding: 0.5rem 1rem;
+}
+/* FORMULIER */
+form{
+  background-color: var(--light);
+  padding: 0;
+  margin-top: 0.6em;
+  position: sticky;
+  top: 0.2em;
+  z-index: 1; /* stackt bovenop de ul (in article) */
+  pointer-events: auto;
+}
+label{
+  display: none;
+}
+/* INPUT AND DATALIST */
+input{
+  font-size: 2em;
+  padding: 0.2em;
+  /* font-weight: 500; */
+  width: 100%;
+  top: 10px;
+  color: black;
+  border: var(--outline) solid var(--highlight);
+  /* border-radius: var(--outline); */
+}
+input:focus-visible {
+  /* outline: var(--outline) solid var(--highlight); */
+  background: var(--highlight);
+  color: var(--light)
+}
+datalist option{
+  font-size: 2em;
+}
+/* 
+  SELECT
+  Select Styles with Pure CSS
+  https://moderncss.dev/custom-select-styles-with-pure-css/
+*/
+/* Reset Styles */
+select {
+  /* A reset of styles, 
+    including removing the default dropdown arrow */
+  /* Hide the Native Select */
+  /* Add if not using autoprefixer */
+  -webkit-appearance: none;
+  appearance: none;
+  /* Additional resets for further consistency */
+  background-color: transparent;
+  border: none;
+  padding: 0 1em 0 0;
+  margin: 0;
+  width: 100%;
+  font-family: inherit;
+  font-size: inherit;
+  cursor: inherit;
+  line-height: inherit;
+  outline: none;
+}
+/* Custom Select Box Styles */
+.select {
+  width: 100%;
+  height: 2em;
+  /* min-width: 15ch;
+  max-width: 30ch; */
+  padding: 0.25em 0.5em;
+  font-size: 2em;
+  cursor: pointer;
+  line-height: 1.4;
+  border: var(--outline) solid black;
+  border-radius: var(--outline);
+  background-color: #fff;
+  background-image: linear-gradient(to top, #ddd, #fff 33%);
+  /* Custom Select Dropdown Arrow */
+  display: grid;
+  grid-template-areas: "select";
+  align-items: center;
+  position: relative; /* we need to make one more addition to .select to ensure that it's relative to our select by  */
+}
+/* Pijltje */
+.select::after {
+  content: "";
+  width: 0.8em;
+  height: 0.6em;
+  background-color: black;
+  clip-path: polygon(100% 0%, 0 0%, 50% 100%);
+  justify-self: end;
+}
+select,
+.select:after {
+  grid-area: select;
+}
+/* :focus State */
+select:focus + .focus {
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  right: -1px;
+  bottom: -1px;
+  border: var(--outline) solid oink;
+  border-radius: inherit;
+}
+
+/*
+  MEDIAQUERIES
+*/
+
+
+@media (min-width: 61rem) {
+
+  ul{
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between; 
+      align-items:flex-start;
+      gap: 0.5rem;
+  }
+  li{
+      /* margin: 0.5rem; */
+      flex: 1 1 30%;
+      /* width: 30%; */
+  }
+  li:nth-child(4){
+      /* flex-grow: 2; */
+      flex-basis: 50%;
+  }
+  
+
+}

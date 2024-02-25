@@ -1,0 +1,108 @@
+<%- include('./partials/head',{pageTitle: "Search members"}); %>
+
+<div class="code">
+  <% data.forEach(member => { %>
+    <%= JSON.stringify(member) %>
+  <% }); %>
+</div>
+
+<%- include('./partials/header') %>
+
+<main>
+  <article>
+    <form>
+      <label for="searchmembers">Search members:</label>
+      <input type="text" 
+        list="members" 
+        id="searchmembers" 
+        name="searchmembers" 
+        autocomplete="off" 
+        placeholder="Search members">
+      <datalist id="members">
+        <% data.forEach(member => { %>
+            <option value="<%= data.name %> <%= data.prefix; %> <%= data.surname; %>"></option>
+          <% }); %>
+      </datalist>
+    </form>
+
+
+    <ul>
+      <!-- <li>
+        <img src="/members/Cyd-Stumpel.JPG" alt="">
+        <h3>Cyd Stumpel</h3>
+      </li>
+      <li>
+        <img src="/members/Dorien-Drees.JPG" alt="">
+        <h3>Dorien Drees</h3>
+      </li>
+      <li>
+        <img src="/members/Justus-Sturkenboom.JPG" alt="">
+        <h3>Justus Sturkenboom</h3>
+      </li>
+      <li>
+        <img src="/members/Krijn-Hoetmer.JPG" alt="">
+        <h3>Krijn Hoetmer</h3>
+      </li>
+      <li>
+        <img src="/members/Suus-ten-Voorde.JPG" alt="">
+        <h3>Suus ten Voorde</h3>
+      </li>
+      <li>
+        <img src="/members/Joost-Faber.JPG" alt="">
+        <h3>Joost Faber</h3>
+      </li>
+      <li>
+        <img src="/members/Ischa-Gast.JPG" alt="">
+        <h3>Ischa Gast</h3>
+      </li>
+      <li>
+        <img src="/members/Koop-Reynders.JPG" alt="">
+        <h3>Koop Reynders</h3>
+      </li>
+      <li>
+        <img src="/members/Charley-Muhren.JPG" alt="">
+        <h3>Charley Muhren</h3>
+      </li>
+      <li>
+        <img src="/members/Berat-Zekaj.JPG" alt="">
+        <h3>Berat Zekaj</h3>
+      </li> -->
+    </ul>
+
+  </article>
+
+</main>
+
+<script>
+  // Formulier afhandeling
+  const searchmembers =  document.querySelector('#searchmembers');
+  searchmembers.addEventListener('change', (event) => {
+    const name = event.target.value;
+    const dashName = name.replace(/\s+/g, '-'); //replace spaces with dash
+    // console.log(imgName);
+
+    const markup = `
+        <li id="${dashName}">
+            <img src="/members/${dashName}.JPG"" alt="">
+            <h3>${name}</h3>
+        </li>
+    `;
+    document.querySelector('ul').insertAdjacentHTML("afterbegin",markup);
+    // window.location.href = "#"+dashName;
+    searchmembers.value=""; //clear input field
+
+  });
+
+  /**
+   * Gebruikte bronnen 
+   * 3 Ways To Create HTML Element In JavaScript 
+   * https://softauthor.com/create-html-element-in-javascript/
+   * 
+   * Element.insertAdjacentHTML() 
+   * https://developer.mozilla.org/en-US/docs/Web/API/Element/insertAdjacentHTML
+   * 
+  */
+
+</script>
+
+<%- include('./partials/foot') %>

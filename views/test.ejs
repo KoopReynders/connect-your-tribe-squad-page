@@ -1,0 +1,19 @@
+<%- include('./partials/head'); %>
+
+<%- include('./partials/header') %>
+
+<main>
+
+  <article>
+
+    <!-- <div class="code"> -->
+      <% data.forEach(member => { %>
+        <p><%= JSON.stringify(member) %></p>
+      <% }); %>
+    <!-- </div> -->
+
+  </article>
+
+</main>
+
+<%- include('./partials/foot') %>
