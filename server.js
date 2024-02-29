@@ -10,6 +10,12 @@ import fetchJson from './helpers/fetch-json.js'
 // Haal alle squads uit de WHOIS API op
 const squadData = await 
 fetchJson('https://fdnd.directus.app/items/squad')
+//Haal emoji data op
+const emojiData = await 
+fetchJson('https://unpkg.com/unicode-emoji-json@0.4.0/data-by-group.json')
+
+// console.log("squadData")
+// console.log(squadData)
 
 // Maak een nieuwe express app aan
 const app = express()
@@ -45,12 +51,12 @@ app.get('/', function (request, response) {
 // https://fdnd.directus.app/items/person/?filter={"squad_id":3}
 // https://fdnd.directus.app/items/person/?filter={"squad_id":3}&sort=name
 // How To Define Routes and HTTP Request Methods in Express https://www.digitalocean.com/community/tutorials/nodejs-express-routing
-
 app.get('/squad', function (request, response) {
   fetchJson('https://fdnd.directus.app/items/person/?filter={"squad_id":3}').then((apiData) => {
     response.render('squad', {persons: apiData.data})
   })
 })
+
 // Maak een GET route voor squad met een request parameter id
 app.get('/squad/:id', function (request, response) {
 
@@ -65,7 +71,7 @@ app.get('/squad/:id', function (request, response) {
 })
 
 
-// GET person
+// GET detail
 // Maak een GET route voor een detailpagina met een request parameter id
 app.get('/detail/:id', function (request, response) {
       
@@ -74,6 +80,22 @@ app.get('/detail/:id', function (request, response) {
     // Render detail.ejs uit de views map en geef de opgehaalde data mee als variable, genaamd person
     response.render('detail', {person: apiData.data, squads: squadData.data})
   })
+})
+
+
+// GET squad memebers en emojiiii
+app.get('/emoji', function (request, response) {
+      
+  const uri = 'https://fdnd.directus.app/items/person/'
+  const filter = '?filter={}'
+  //sort defaul ascending, with minus sign (-) order is reversed
+  const sort = '&sort=-name'
+  fetchJson(uri+filter+sort).then((personData) => {
+    // console.log(apiData)
+    // Render ejs uit de views map en geef de opgehaalde data mee als variable, genaamd person
+    response.render('emoji', {members: personData.data, squads: squadData.data, emojii: emojiData})
+  })
+
 })
 
 

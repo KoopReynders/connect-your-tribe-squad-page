@@ -1,0 +1,185 @@
+<%- include('./partials/head'); %>
+
+
+<header>
+  <h1>Emojiiii me !</h1>
+  <nav>
+    <button name="All">All</button>
+    <button name="3">Squad 1D</button>
+    <button name="4">Squad 1E</button>
+    <button name="5">Squad 1F</button>
+  </nav>
+  <a href="#choose">Emoji select</a>
+</header>
+
+<main>
+  <h2>Tribe 2324</h2>
+  Tribe members: 
+  <%= members.length %>
+  Number of squads: 
+  <%= squads.length %>
+
+  <ul>
+    <% members.forEach(member => { %>
+      <li class="squadid<%= member.squad_id %>">
+        <%= member.name %> <%= member.prefix %> <%= member.surname %> - <a href="<%= member.website %>">Website</a>
+        <img src="<%= member.avatar %>" alt="">
+      </li>
+    <% }); %>
+  </ul>
+
+
+</main>
+
+<script>
+  //client side javascript voor de filters op squad
+  const membersAll = document.querySelectorAll("main li")
+  const members3 = document.querySelectorAll(".squadid3")
+  const members4 = document.querySelectorAll(".squadid4")
+  const members5 = document.querySelectorAll(".squadid5")
+  const filterButtons = document.querySelectorAll("header button")
+  // console.log("button")
+  // console.log(filterButtons)
+
+  filterButtons.forEach(but => {
+    but.addEventListener("click",function(){
+      // console.log(this.name)
+      membersAll.forEach(item => {
+        item.classList.add("hide");  //eerst alles hiden
+      })
+      eval('members'+this.name).forEach(item => {
+        item.classList.remove("hide");  //dan subset (weer) tonen
+      })
+    })
+  });
+</script>
+
+
+
+<aside id="choose">
+
+  Emojiiii length: 
+  <%= emojii.node %>
+
+  <label for="standard-select">Emoji Select</label>
+  <div class="select">
+    <select id="standard-select">
+
+      <optgroup label="Smileys & Emotion">
+        <% emojii["Smileys & Emotion"].forEach(item => { %>
+          <option value="<%= item.emoji %>"><%= item.emoji %></option>
+        <% }); %>
+      </optgroup>
+      
+      <optgroup label="People & Body">
+        <% emojii["People & Body"].forEach(item => { %>
+          <option value="<%= item.emoji %>"><%= item.emoji %></option>
+        <% }); %>
+      </optgroup>
+
+    </select>
+    <span class="focus"></span>
+  </div>
+
+
+  <details>
+    <summary>Smileys & Emotion</summary>
+    <ol>
+      <% emojii["Smileys & Emotion"].forEach(item => { %>
+        <li>
+          <%= item.emoji %>
+        </li>
+      <% }); %>
+    </ol>
+  </details>
+
+  <details>
+    <summary>People & Body</summary>
+    <ol>
+      <% emojii["People & Body"].forEach(item => { %>
+        <li>
+          <%= item.emoji %>
+        </li>
+      <% }); %>
+    </ol>
+  </details>
+
+  <details>
+    <summary>Animals & Nature</summary>
+    <ol>
+      <% emojii["Animals & Nature"].forEach(item => { %>
+        <li>
+          <%= item.emoji %>
+        </li>
+      <% }); %>
+    </ol>
+  </details>
+
+  <details>
+    <summary>Food & Drink</summary>
+    <ol>
+      <% emojii["Food & Drink"].forEach(item => { %>
+        <li>
+          <%= item.emoji %>
+        </li>
+      <% }); %>
+    </ol>
+  </details>
+
+  <details>
+    <summary>Travel & Places</summary>
+    <ol>
+      <% emojii["Travel & Places"].forEach(item => { %>
+        <li>
+          <%= item.emoji %>
+        </li>
+      <% }); %>
+    </ol>
+  </details>
+
+  <details>
+    <summary>Activities</summary>
+    <ol>
+      <% emojii["Activities"].forEach(item => { %>
+        <li>
+          <%= item.emoji %>
+        </li>
+      <% }); %>
+    </ol>
+  </details>
+
+  <details>
+    <summary>Objects</summary>
+    <ol>
+      <% emojii["Objects"].forEach(item => { %>
+        <li>
+          <%= item.emoji %>
+        </li>
+      <% }); %>
+    </ol>
+  </details>
+
+  <details>
+    <summary>Symbols</summary>
+    <ol>
+      <% emojii["Symbols"].forEach(item => { %>
+        <li>
+          <%= item.emoji %>
+        </li>
+      <% }); %>
+    </ol>
+  </details>
+
+  <details>
+    <summary>Flags</summary>
+    <ol>
+      <% emojii["Flags"].forEach(item => { %>
+        <li>
+          <%= item.emoji %>
+        </li>
+      <% }); %>
+    </ol>
+  </details>
+  
+  
+</aside>
