@@ -2,7 +2,16 @@
 
 <h1>{{ person.name }}</h1>
 
-<a href="/">Back</a>
+<p>
+    Animal: <a href="/animals/{{ person.fav_animal }}">{{ person.fav_animal }}</a>
+</p>
+<p>
+    Team: <a href="/teams/{{ person.team }}">{{ person.team }}</a>
+</p>
+
+
+
+{% comment %} <a href="/">Back</a> {% endcomment %}
 
 
 
