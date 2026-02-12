@@ -3,6 +3,8 @@
 <h1>Squad 1J</h1>
 <h2>Animals</h2>
 
+<a href="/animals">All</a>
+- 
 <a href="/animals/Leeuw">Leeuw</a>
  - 
 <a href="/animals/Pinguin">Pinguin</a>
@@ -24,7 +26,8 @@
   {% for person in persons %}
     <li>
       <a href="/student/{{ person.id }}">{{ person.name }}</a>
-      - {{ person.fav_animal }}
+      - 
+      <a href="/animals/{{ person.fav_animal }}">{{ person.fav_animal }}</a>
       
       </li>
   {% endfor %}
