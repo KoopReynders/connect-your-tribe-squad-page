@@ -1,7 +1,6 @@
 {% render 'partials/head.liquid', title: 'Squad page' %}
 
-<h1>Squad 1J</h1>
-<h2>Animals</h2>
+<h1>Animals</h1>
 
 <a href="/animals">All</a>
 - 
@@ -22,6 +21,7 @@
 <a href="/animals/Nijlpaard">Nijlpaard</a>
 
 
+<h2>{{ persons[0].fav_animal }}</h2>
 <ul>
   {% for person in persons %}
     <li>
