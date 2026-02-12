@@ -1,136 +1,203 @@
-// Importeer het npm pakket express uit de node_modules map
+// Importeer het npm package Express (uit de door npm aangemaakte node_modules map)
+// Deze package is geïnstalleerd via `npm install`, en staat als 'dependency' in package.json
 import express from 'express'
 
-// Importeer de zelfgemaakte functie fetchJson uit de ./helpers map
-import fetchJson from './helpers/fetch-json.js'
+// Importeer de Liquid package (ook als dependency via npm geïnstalleerd)
+import { Liquid } from 'liquidjs';
 
-// // Stel het basis endpoint in
-// const apiUrl = 'https://fdnd.directus.app/items'
+// Je kunt de volgende URLs uit onze API gebruiken:
+// - https://fdnd.directus.app/items/tribe
+// - https://fdnd.directus.app/items/squad
+// - https://fdnd.directus.app/items/person
+// En combineren met verschillende query parameters als filter, sort, search, etc.
+// Gebruik hiervoor de documentatie van https://directus.io/docs/guides/connect/query-parameters
+// En de oefeningen uit https://github.com/fdnd-task/connect-your-tribe-squad-page/blob/main/docs/squad-page-ontwerpen.md
 
-// Haal alle squads uit de WHOIS API op
-const squadData = await 
-fetchJson('https://fdnd.directus.app/items/squad')
-//Haal emoji data op
-const emojiData = await 
-fetchJson('https://unpkg.com/unicode-emoji-json@0.4.0/data-by-group.json')
+// Haal bijvoorbeeld alle eerstejaars squads van dit jaar uit de WHOIS API op (2025–2026)
+const params = {
+  'filter[cohort]': '2526',
+  'filter[tribe][name]': 'FDND Jaar 1'
+}
+// En maak hiermee de URL aan, zoals we dat ook in de browser deden
+const apiURL = 'https://fdnd.directus.app/items/squad?' + new URLSearchParams(params)
+// Laat eventueel zien wat die URL is
+// (Let op: dit is _niet_ de console van je browser, maar van NodeJS, in je terminal)
+console.log('API URL voor squads:', apiURL)
 
-// console.log("squadData")
-// console.log(squadData)
+const squadResponse = await fetch(apiURL)
+// Lees van de response van die fetch het JSON object in, waar we iets mee kunnen doen
+const squadResponseJSON = await squadResponse.json()
 
-// Maak een nieuwe express app aan
+// Controleer eventueel de data in je console
+// (Let op: dit is _niet_ de console van je browser, maar van NodeJS, in je terminal)
+// console.log(squadResponseJSON)
+
+
+// Maak een nieuwe Express applicatie aan, waarin we de server configureren
 const app = express()
 
-// Stel ejs in als template engine
-app.set('view engine', 'ejs')
-
-// Stel de map met ejs templates in
-app.set('views', './views')
-
-// Gebruik de map 'public' voor statische resources, zoals stylesheets, afbeeldingen en client-side JavaScript
+// Gebruik de map 'public' voor statische bestanden (resources zoals CSS, JavaScript, afbeeldingen en fonts)
+// Bestanden in deze map kunnen dus door de browser gebruikt worden
 app.use(express.static('public'))
 
+// Stel Liquid in als 'view engine'
+const engine = new Liquid();
+app.engine('liquid', engine.express()); 
 
+// Stel de map met Liquid templates in
+// Let op: de browser kan deze bestanden niet rechtstreeks laden (zoals voorheen met HTML bestanden)
+app.set('views', './views')
+
+// Zorg dat werken met request data (volgende week) makkelijker wordt
+app.use(express.urlencoded({extended: true}))
+
+
+// Om Views weer te geven, heb je Routes nodig
 // Maak een GET route voor de index
-app.get('/', function (request, response) {
+app.get('/', async function (request, response) {
 
-  // Haal alle personen uit de WHOIS API op
-  fetchJson('https://fdnd.directus.app/items/person').then((apiData) => {
-    // apiData bevat gegevens van alle personen uit alle squads
-    // Je zou dat hier kunnen filteren, sorteren, of zelfs aanpassen, voordat je het doorgeeft aan de view
+  // Haal alle personen uit de WHOIS API op, van dit jaar, gesorteerd op naam
+  const params = {
+    // Sorteer op naam
+    'sort': 'name',
 
-    // Render index.ejs uit de views map en geef de opgehaalde data mee als variabele, genaamd persons
-    response.render('index', {persons: apiData.data, squads: squadData.data})
-  })
+    // Geef aan welke data je per persoon wil terugkrijgen
+    'fields': '*,squads.*',
 
-})
-
-
-// Squad pagina
-// Maak een GET route voor squad
-// Haal alle personen uit de betreffende squad uit de WHOIS API op
-// https://fdnd.directus.app/items/person/?filter={"squad_id":3}
-// https://fdnd.directus.app/items/person/?filter={"squad_id":3}&sort=name
-// How To Define Routes and HTTP Request Methods in Express https://www.digitalocean.com/community/tutorials/nodejs-express-routing
-app.get('/squad', function (request, response) {
-  fetchJson('https://fdnd.directus.app/items/person/?filter={"squad_id":3}').then((apiData) => {
-    response.render('squad', {persons: apiData.data})
-  })
-})
-
-// Maak een GET route voor squad met een request parameter id
-app.get('/squad/:id', function (request, response) {
-
-  const uri = 'https://fdnd.directus.app/items/person/'
-  const squadId = request.params.id
-  const filter = '?filter={"squad_id":'+squadId+'}'
-  const sort = '' //'&sort=name'
-
-    fetchJson(uri+filter+sort).then((apiData) => {
-      response.render('squad', {persons: apiData.data})
-    })
-})
-
-
-// GET detail
-// Maak een GET route voor een detailpagina met een request parameter id
-app.get('/detail/:id', function (request, response) {
-      
-  // Gebruik de request parameter id en haal de juiste persoon uit de WHOIS API op
-  fetchJson('https://fdnd.directus.app/items/person/' + request.params.id).then((apiData) => {
-    // Render detail.ejs uit de views map en geef de opgehaalde data mee als variable, genaamd person
-    response.render('detail', {person: apiData.data, squads: squadData.data})
-  })
-})
-
-
-// GET squad memebers en emojiiii
-app.get('/emoji', function (request, response) {
-      
-  const uri = 'https://fdnd.directus.app/items/person/'
-  const filter = '?filter={}'
-  //sort defaul ascending, with minus sign (-) order is reversed
-  const sort = '&sort=-name'
-  fetchJson(uri+filter+sort).then((personData) => {
-    // console.log(apiData)
-    // Render ejs uit de views map en geef de opgehaalde data mee als variable, genaamd person
-    response.render('emoji', {members: personData.data, squads: squadData.data, emojii: emojiData})
-  })
-
-})
-
-
-// POST Person
-// Maak een POST route voor post data op een person
-// How To Retrieve URL and POST Parameters with Express https://www.digitalocean.com/community/tutorials/use-expressjs-to-get-url-and-post-parameters
-// Sending form data https://developer.mozilla.org/en-US/docs/Learn/Forms/Sending_and_retrieving_form_data
-
-/*
-  express.json() and express.urlencoded() 
-  are built-in middleware functions to support JSON-encoded and URL-encoded bodies.
-*/
-//app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-app.post('/detail', function (request, response) {
-  
-    console.log(request.body)
-    const user_id = request.body.id || 1;
-    // const like = request.body.like || -1;
-    // console.log(user_id)
-    // console.log(like)
-
-    // response.send({
-    //   'user_id': user_id,
-    //   'likes': like
-    // });g
+    // Combineer meerdere filters
+    'filter[squads][squad_id][tribe][name]': 'FDND Jaar 1',
+    'filter[squads][squad_id][cohort]': '2526',
     
-  // Na afhandelen van de POST, doe een redirect naar GET /person
-  response.redirect('/detail/'+user_id)
+    // Filter eventueel alleen op een bepaalde squad
+    // 'filter[squads][squad_id][name]': '1I',
+    // 'filter[squads][squad_id][name]': '1J',
+  }
+  const apiURL = 'https://fdnd.directus.app/items/person?' + new URLSearchParams(params)
+  console.log('API URL voor persons:', apiURL)
+  const personResponse = await fetch(apiURL)
+  // En haal daarvan de JSON op
+  const personResponseJSON = await personResponse.json()
+  // personResponseJSON bevat gegevens van alle personen uit alle squads van dit jaar
+  // Toon eventueel alle data in de console
+  // console.log(personResponseJSON)
+
+  // Render index.liquid uit de views map en geef de opgehaalde data mee als variabele, genaamd persons
+  // Geef ook de eerder opgehaalde squad data mee aan de view
+  response.render('index.liquid', {
+    persons: personResponseJSON.data, 
+    squads: squadResponseJSON.data
+  })
 })
 
 
+// Get  ANIMALS
+app.get('/animals', async function (request, response) {
+
+  const params = {
+    'sort': 'name', 
+    'filter[squads][squad_id][tribe][name]': 'FDND Jaar 1',
+    'filter[squads][squad_id][cohort]': '2526',
+  }
+  const apiURL = 'https://fdnd.directus.app/items/person?' + new URLSearchParams(params)
+  console.log('API URL voor Animals:', apiURL)
+  const personResponse = await fetch(apiURL)
+  const personResponseJSON = await personResponse.json()
+
+  response.render('animals.liquid', {
+    persons: personResponseJSON.data, 
+    squads: squadResponseJSON.data
+  })
+})
+app.get('/animals/:id', async function (request, response) {
+
+  const params = {
+    'sort': 'name', 
+    'filter[squads][squad_id][tribe][name]': 'FDND Jaar 1',
+    'filter[squads][squad_id][cohort]': '2526',
+    'filter[fav_animal]': request.params.id
+  }
+  const apiURL = 'https://fdnd.directus.app/items/person?' + new URLSearchParams(params)
+  console.log('API URL voor A Animial filter:', apiURL)
+  const personResponse = await fetch(apiURL)
+  const personResponseJSON = await personResponse.json()
+
+  response.render('animals.liquid', {
+    persons: personResponseJSON.data, 
+    squads: squadResponseJSON.data
+  })
+})
 
 
+// Get TEAMS
+app.get('/teams', async function (request, response) {
+  //https://fdnd.directus.app/items/person?groupBy[]=team
+  const params = {
+    'filter[squads][squad_id][tribe][name]': 'FDND Jaar 1',
+    'filter[squads][squad_id][cohort]': '2526',
+  }
+  const apiURL = 'https://fdnd.directus.app/items/person?' + new URLSearchParams(params) + '&groupBy[]=team'
+  console.log('API URL voor teams:', apiURL)
+  const teamsResponse = await fetch(apiURL)
+  const teamsResponseJSON = await teamsResponse.json()
+
+  response.render('teams.liquid', {
+    teams: teamsResponseJSON.data, 
+    squads: squadResponseJSON.data
+  })
+})
+app.get('/teams/:id', async function (request, response) {
+  //https://fdnd.directus.app/items/person?groupBy[]=team
+  const teamsParams = {
+    'filter[squads][squad_id][tribe][name]': 'FDND Jaar 1',
+    'filter[squads][squad_id][cohort]': '2526',
+  }
+  const teamsApiURL = 'https://fdnd.directus.app/items/person?' + new URLSearchParams(teamsParams) + '&groupBy[]=team'
+  const teamsResponse = await fetch(teamsApiURL)
+  const teamsResponseJSON = await teamsResponse.json()
+
+  //https://fdnd.directus.app/items/person?filter[team]=Jolly
+  const params = {
+      'sort': 'name', 
+      'filter[squads][squad_id][tribe][name]': 'FDND Jaar 1',
+      'filter[squads][squad_id][cohort]': '2526',
+      'filter[team]': request.params.id
+    }
+  const apiURL = 'https://fdnd.directus.app/items/person?' + new URLSearchParams(params)
+  console.log('API URL voor A team:', apiURL)
+  const personsResponse = await fetch(apiURL)
+  const personsResponseJSON = await personsResponse.json()
+
+  response.render('teams.liquid', {
+    persons: personsResponseJSON.data, 
+    teams: teamsResponseJSON.data, 
+    squads: squadResponseJSON.data
+  })
+})
+
+// Maak een GET route voor een detailpagina met een route parameter, id
+// Zie de documentatie van Express voor meer info: https://expressjs.com/en/guide/routing.html#route-parameters
+app.get('/student/:id', async function (request, response) {
+  // Gebruik de request parameter id en haal de juiste persoon uit de WHOIS API op
+  const personDetailResponse = await fetch('https://fdnd.directus.app/items/person/' + request.params.id)
+  // En haal daarvan de JSON op
+  const personDetailResponseJSON = await personDetailResponse.json()
+  
+  // Render student.liquid uit de views map en geef de opgehaalde data mee als variable, genaamd person
+  // Geef ook de eerder opgehaalde squad data mee aan de view
+  response.render('student.liquid', {
+    person: personDetailResponseJSON.data, 
+    squads: squadResponseJSON.data
+  })
+})
+
+
+// POST
+// Maak een POST route voor de index; hiermee kun je bijvoorbeeld formulieren afvangen
+app.post('/', async function (request, response) {
+  // Je zou hier data kunnen opslaan, of veranderen, of wat je maar wilt
+  // Er is nog geen afhandeling van POST, redirect naar GET op /
+  response.redirect(303, '/')
+})
 
 
 

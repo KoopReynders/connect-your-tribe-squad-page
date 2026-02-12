@@ -1,0 +1,37 @@
+{% render 'partials/head.liquid', title: 'Squad page' %}
+
+<h1>Squad 1J</h1>
+<h2>Animals</h2>
+
+<a href="/animals/Leeuw">Leeuw</a>
+ - 
+<a href="/animals/Pinguin">Pinguin</a>
+ - 
+<a href="/animals/Tijger">Tijger</a>
+ - 
+<a href="/animals/Kat">Kat</a>
+ - 
+<a href="/animals/Aap">Aap</a>
+ - 
+<a href="/animals/Panda">Panda</a>
+ - 
+<a href="/animals/Konijn">Konijn</a>
+ - 
+<a href="/animals/Nijlpaard">Nijlpaard</a>
+
+
+<ul>
+  {% for person in persons %}
+    <li>
+      <a href="/student/{{ person.id }}">{{ person.name }}</a>
+      - {{ person.fav_animal }}
+      
+      </li>
+  {% endfor %}
+</ul>
+
+
+
+
+
+{% render 'partials/foot.liquid', squads: squads %}

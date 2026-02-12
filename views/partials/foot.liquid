@@ -1,0 +1,22 @@
+    
+    <hr>
+
+    <footer>
+
+      <h2>Squads</h2>
+      <ul>
+        {% for squad in squads %}
+          <li>Squad {{ squad.name }}</li>
+        {% endfor %}
+      </ul>
+
+      <h2>Pages</h2>
+      <ul>
+          <li><a href="/student">Student</a></li>
+          <li><a href="/animals">Animals</a></li>
+          <li><a href="/teams">Teams</a></li>
+      </ul>
+
+    </footer>
+  </body>
+</html>

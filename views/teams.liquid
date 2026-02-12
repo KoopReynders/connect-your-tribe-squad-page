@@ -1,0 +1,27 @@
+{% render 'partials/head.liquid', title: 'Squad page' %}
+
+<h1>Team {{ persons[0].team }}</h1>
+
+<ul>
+  {% for member in persons %}
+      <li>
+        <a href="/student/{{ member.id }}">{{ member.name }}</a>
+      </li>
+  {% endfor %}
+</ul>
+
+
+<h2>Teams 2025-2026</h2>
+<ul>
+  {% for name in teams %}
+    {% if name.team %}
+      <li>
+        <a href="/teams/{{ name.team }}">{{ name.team }}</a>
+      </li>
+    {% endif %}
+  {% endfor %}
+</ul>
+
+
+
+{% render 'partials/foot.liquid', squads: squads %}
