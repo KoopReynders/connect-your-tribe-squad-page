@@ -2,6 +2,13 @@
 
 <h1>Animals</h1>
 
+<ul>
+  {% for animal in animals %}
+    <li>{{ animal.fav_animal }}</li>
+  {% endfor %}
+</ul>
+
+
 <a href="/animals">All</a>
 - 
 <a href="/animals/Leeuw">Leeuw</a>

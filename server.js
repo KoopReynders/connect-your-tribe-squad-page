@@ -13,6 +13,7 @@ import { Liquid } from 'liquidjs';
 // Gebruik hiervoor de documentatie van https://directus.io/docs/guides/connect/query-parameters
 // En de oefeningen uit https://github.com/fdnd-task/connect-your-tribe-squad-page/blob/main/docs/squad-page-ontwerpen.md
 
+//FETCH Squad data
 // Haal bijvoorbeeld alle eerstejaars squads van dit jaar uit de WHOIS API op (2025–2026)
 const params = {
   'filter[cohort]': '2526',
@@ -52,6 +53,7 @@ app.set('views', './views')
 app.use(express.urlencoded({extended: true}))
 
 
+//GET INDEX/ALl
 // Om Views weer te geven, heb je Routes nodig
 // Maak een GET route voor de index
 app.get('/', async function (request, response) {
@@ -90,7 +92,7 @@ app.get('/', async function (request, response) {
 })
 
 
-// Get  ANIMALS
+//GET ANIMALS
 app.get('/animals', async function (request, response) {
 
   const params = {
@@ -99,11 +101,24 @@ app.get('/animals', async function (request, response) {
     'filter[squads][squad_id][cohort]': '2526',
   }
   const apiURL = 'https://fdnd.directus.app/items/person?' + new URLSearchParams(params)
-  console.log('API URL voor Animals:', apiURL)
+  console.log('API URL voor Persons:', apiURL)
   const personResponse = await fetch(apiURL)
   const personResponseJSON = await personResponse.json()
 
+  const paramsAnimals = {
+    // 'sort': 'name', 
+    'filter[squads][squad_id][tribe][name]': 'FDND Jaar 1',
+    'filter[squads][squad_id][cohort]': '2526',
+    'groupBy[]':'fav_animal'
+  }
+  const apiURLAnimals = 'https://fdnd.directus.app/items/person?' + new URLSearchParams(paramsAnimals)
+  console.log('API URL voor Animals:', apiURLAnimals)
+  const animalsResponse = await fetch(apiURLAnimals)
+  const animalsResponseJSON = await animalsResponse.json()
+
+
   response.render('animals.liquid', {
+    animals: animalsResponseJSON.data,
     persons: personResponseJSON.data, 
     squads: squadResponseJSON.data
   })
@@ -128,14 +143,15 @@ app.get('/animals/:id', async function (request, response) {
 })
 
 
-// Get TEAMS
+//GET TEAMS
 app.get('/teams', async function (request, response) {
   //https://fdnd.directus.app/items/person?groupBy[]=team
-  const params = {
+  const paramsTeams = {
     'filter[squads][squad_id][tribe][name]': 'FDND Jaar 1',
     'filter[squads][squad_id][cohort]': '2526',
+    'groupBy[]':'team'
   }
-  const apiURL = 'https://fdnd.directus.app/items/person?' + new URLSearchParams(params) + '&groupBy[]=team'
+  const apiURL = 'https://fdnd.directus.app/items/person?' + new URLSearchParams(paramsTeams)
   console.log('API URL voor teams:', apiURL)
   const teamsResponse = await fetch(apiURL)
   const teamsResponseJSON = await teamsResponse.json()
@@ -150,8 +166,9 @@ app.get('/teams/:id', async function (request, response) {
   const teamsParams = {
     'filter[squads][squad_id][tribe][name]': 'FDND Jaar 1',
     'filter[squads][squad_id][cohort]': '2526',
+    'groupBy[]':'team'
   }
-  const teamsApiURL = 'https://fdnd.directus.app/items/person?' + new URLSearchParams(teamsParams) + '&groupBy[]=team'
+  const teamsApiURL = 'https://fdnd.directus.app/items/person?' + new URLSearchParams(teamsParams)
   const teamsResponse = await fetch(teamsApiURL)
   const teamsResponseJSON = await teamsResponse.json()
 
@@ -174,6 +191,7 @@ app.get('/teams/:id', async function (request, response) {
   })
 })
 
+//GET STUDENT
 // Maak een GET route voor een detailpagina met een route parameter, id
 // Zie de documentatie van Express voor meer info: https://expressjs.com/en/guide/routing.html#route-parameters
 app.get('/student/:id', async function (request, response) {

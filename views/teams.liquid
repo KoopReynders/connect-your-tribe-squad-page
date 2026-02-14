@@ -1,7 +1,6 @@
 {% render 'partials/head.liquid', title: 'Squad page' %}
 
 <h1>Team {{ persons[0].team }}</h1>
-
 <ul>
   {% for member in persons %}
       <li>
@@ -12,6 +11,7 @@
 
 
 <h2>Teams 2025-2026</h2>
+<!-- Lijst alle teams met links naar team detail pagina -->
 <ul>
   {% for name in teams %}
     {% if name.team %}
@@ -21,7 +21,6 @@
     {% endif %}
   {% endfor %}
 </ul>
-
 
 
 {% render 'partials/foot.liquid', squads: squads %}
